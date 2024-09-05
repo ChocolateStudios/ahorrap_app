@@ -1,4 +1,4 @@
 export interface UserResource {
     id: number;
-    username: number;
+    username: string;
 }

@@ -1,18 +1,24 @@
 import http from '@/core/_shared/api/HttpCommon';
 import { AxiosResponse } from 'axios';
+import { ProfileResource } from '../resources/ProfileResource';
+import { SaveProfileResource } from '../resources/SaveProfileResource';
 
-class ProfilesApi {
-    private baseUrl = "profiles";
+export class ProfilesApi {
+    private static baseUrl = "profiles";
 
-    async createProfile(data: any): Promise<AxiosResponse<any, any>> {
+    static async createProfile(data: SaveProfileResource): Promise<AxiosResponse<ProfileResource, any>> {
         return await http.post(`${this.baseUrl}`, data);
     }
 
-    async updateProfile(data: any): Promise<AxiosResponse<any, any>> {
+    static async updateProfile(data: SaveProfileResource): Promise<AxiosResponse<ProfileResource, any>> {
         return await http.put(`${this.baseUrl}`, data);
     }
 
-    async getProfile(data: any): Promise<AxiosResponse<any, any>> {
-        return await http.get(`${this.baseUrl}`, data);
+    static async deleteProfile(): Promise<AxiosResponse<ProfileResource, any>> {
+        return await http.delete(`${this.baseUrl}`);
+    }
+
+    static async getProfile(): Promise<AxiosResponse<ProfileResource, any>> {
+        return await http.get(`${this.baseUrl}`);
     }
 }

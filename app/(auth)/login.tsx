@@ -1,15 +1,21 @@
 import { SaveUserResource } from '@/core/users/resources/SaveUserResource';
-import { LoginUserUsecase } from '@/core/users/usecases/LoginUserUsecase';
+import { LoginUserUseCase } from '@/core/users/usecases/LoginUserUseCase';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, StatusBar, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, StatusBar, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { icon } from '@/assets/images';
-import { useNavigation } from '@react-navigation/native';
+import { Link, router, useNavigation } from 'expo-router';
+import { validatePassword, validateUsername } from '@/core/_shared/utils/validationUtils';
+import { SimpleAlert } from '@/components/_shared/SimpleAlert';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const loginUserUseCase = new LoginUserUseCase();
 
   useEffect(() => {
     navigation.setOptions({
@@ -17,16 +23,47 @@ export default function LoginScreen() {
     });
   }, [navigation]);
 
-  const loginUserUsecase = new LoginUserUsecase();
+  const _validateUsername = (username: string) => {
+    const validationResult = validateUsername(username);
+    setUsernameError(validationResult.errorMessage);
+    return validationResult.isValid;
+  };
+
+  const _validatePassword = (password: string) => {
+    const validationResult = validatePassword(password);
+    setPasswordError(validationResult.errorMessage);
+    return validationResult.isValid;
+  };
 
   const handleLogin = async () => {
-    const resource: SaveUserResource = {
-      username,
-      password,
-    };
+    if (isLoading)
+      return;
 
-    const user = await loginUserUsecase.loginUser(resource);
-    console.log('Usuario autenticado:', user);
+    const isUsernameValid = _validateUsername(username);
+    const isPasswordValid = _validatePassword(password);
+    
+    if (isUsernameValid && isPasswordValid) {
+      setIsLoading(true);
+
+      const resource: SaveUserResource = {
+        username,
+        password,
+      };
+
+      const response = await loginUserUseCase.loginUser(resource);
+
+      if (response.success) {
+        router.push('/home');
+      } else {
+        setUsernameError(response.usernameErrorMessage);
+        setPasswordError(response.passwordErrorMessage);
+        
+        if (response.alertErrorMessage) {
+          SimpleAlert('Error', response.alertErrorMessage);
+        }
+      }
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,32 +81,48 @@ export default function LoginScreen() {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Usuario"
+          placeholder="Correo electrónico"
           value={username}
-          onChangeText={setUsername}
+          onChangeText={(text) => {
+            setUsername(text);
+            _validateUsername(text);
+          }}
+          keyboardType="email-address"
           autoCapitalize="none"
         />
+        {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
+
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={(text) => {
+            setPassword(text);
+            _validatePassword(text);
+          }}
           secureTextEntry
         />
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
       </View>
       
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Iniciar sesión</Text>
       </TouchableOpacity>
+
+      {isLoading && <ActivityIndicator size="large" style={styles.loadingIndicator} />}
       
       <TouchableOpacity>
-        <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
+        <Link href="/recover" style={styles.forgotPasswordLink}>
+          <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
+        </Link>
       </TouchableOpacity>
       
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>¿No tienes una cuenta? </Text>
         <TouchableOpacity>
-          <Text style={styles.signupLink}>Regístrate</Text>
+          <Link href="/register">
+            <Text style={styles.signupLink}>Regístrate</Text>
+          </Link>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -114,6 +167,11 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
   },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
+  },
   loginButton: {
     backgroundColor: '#4CAF50',
     borderRadius: 5,
@@ -127,9 +185,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  forgotPasswordLink: {
+    marginTop: 15,
+  },
   forgotPassword: {
     color: '#4CAF50',
-    marginTop: 15,
   },
   signupContainer: {
     flexDirection: 'row',
@@ -141,5 +201,8 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#4CAF50',
     fontWeight: 'bold',
+  },
+  loadingIndicator: {
+    marginTop: 20,
   },
 });

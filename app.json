@@ -4,8 +4,8 @@
     "slug": "ahorrapapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "ahorrapapp",
+    "icon": "./assets/images/AhorrAppIcon.png",
+    "scheme": "ahorrapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -19,18 +19,35 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.diegoalons0.ahorrapp",
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/AhorrAppIcon.png"
     },
     "plugins": [
       "expo-router"
     ],
     "experiments": {
       "typedRoutes": true
-    }
-  }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bf3ce801-5f1a-4bd0-8aa4-1d4c645dd22d"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bf3ce801-5f1a-4bd0-8aa4-1d4c645dd22d"
+    },
+    "sdkVersion": "51.0.0"
+  },
+  "name": "ahorrapapp"
 }

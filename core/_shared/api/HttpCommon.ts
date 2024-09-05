@@ -4,14 +4,15 @@ const instance = axios.create({
     baseURL: `${process.env.EXPO_PUBLIC_API_URL}/api/v1`,
     headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
     },
 });
 
 // Interceptor to add an authorization token to each request
 instance.interceptors.request.use(
     (config: AxiosRequestConfig) => {
+        console.log('INTERCEPTOR HABLANDO');
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -21,9 +22,9 @@ instance.interceptors.request.use(
     (error: AxiosError) => {
         return Promise.reject(error);
     }
-  );
-  
-  // Interceptor for handling server errors
+);
+
+// Interceptor for handling server errors
 instance.interceptors.response.use(
     (response: AxiosResponse) => {
         return response;
@@ -38,13 +39,13 @@ instance.interceptors.response.use(
                     console.error('Error en el servidor');
                     break;
             }
-            } else if (error.request) {
+        } else if (error.request) {
             console.error('No se recibió respuesta del servidor');
-            } else {
+        } else {
             console.error('Error al configurar la petición');
-            }
-            return Promise.reject(error);
         }
-);  
+        return Promise.reject(error);
+    }
+);
 
 export default instance;
