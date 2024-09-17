@@ -8,7 +8,7 @@ export class RegisterUserUseCase {
         try {
             const response = await UsersApi.registerUser(saveUserResource);
             const resource = response.data;
-            console.log('Usuario registrado:', resource);
+            console.log('Usuario registered:', resource);
 
             if (!resource || !resource.token) {
                 return new AuthenticationUserResponse({

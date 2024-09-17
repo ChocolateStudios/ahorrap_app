@@ -18,7 +18,7 @@ export const ExpenseListItem = React.memo(({ item }: { item: Expense }) => (
         <View style={styles.expenseDetails}>
             <Text style={styles.expenseDescription}>{item.description}</Text>
             <Text style={styles.expenseDate}>
-                {format(item.dateTime, "d 'de' MMMM, yyyy", { locale: es })}
+                {format(item.dateTime, "d 'de' MMMM, yyyy hh:mm a", { locale: es })}
             </Text>
         </View>
         <Text style={styles.expenseAmount}>S/. {item.amount.toFixed(2)}</Text>

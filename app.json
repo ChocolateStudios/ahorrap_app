@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ahorrapapp",
-    "slug": "ahorrapapp",
+    "name": "ahorrapp",
+    "slug": "ahorrapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/AhorrAppIcon.png",
@@ -27,7 +27,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/AhorrAppIcon.png"
     },
     "plugins": [
@@ -49,5 +49,5 @@
     },
     "sdkVersion": "51.0.0"
   },
-  "name": "ahorrapapp"
+  "name": "ahorrapp"
 }

@@ -16,7 +16,7 @@ export class LoginUserUseCase {
 
             localStorage.setItem('token', resource.token);
 
-            console.log('Usuario logueado:', resource);
+            console.log('Usuario logged:', resource);
             return new AuthenticationUserResponse({
                 authenticatedUser: resource,
                 success: true,
