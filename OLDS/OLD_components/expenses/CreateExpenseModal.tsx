@@ -7,6 +7,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { SimpleAlert } from "../_shared/SimpleAlert";
 import { SaveExpenseResource } from "@/core/expenses/resources/SaveExpenseResource";
 import { CreateExpenseUseCase } from "@/core/expenses/usecases/CreateExpenseUseCase";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function CreateExpenseModal({ isVisible, setIsVisible, setExpenses, setTotalExpenses }: any) {
     const [loading, setLoading] = useState(false);
@@ -48,16 +50,24 @@ export default function CreateExpenseModal({ isVisible, setIsVisible, setExpense
         setLoading(false);
     };
 
-    const onChangeDatePicker = (event: any, selectedDate?: Date) => {
-        const currentDate = selectedDate || date;
-        setShowDatePicker(Platform.OS === 'ios');
-        setDate(currentDate);
-    };
+    // const onChangeDatePicker = (event: any, selectedDate?: Date) => {
+    //     const currentDate = selectedDate || date;
+    //     setShowDatePicker(Platform.OS === 'ios');
+    //     setDate(currentDate);
+    // };
 
-    const onChangeTimePicker = (event: any, selectedTime?: Date) => {
-        const currentTime = selectedTime || date;
-        setShowTimePicker(Platform.OS === 'ios');
-        setDate(currentTime);
+    // const onChangeTimePicker = (event: any, selectedTime?: Date) => {
+    //     const currentTime = selectedTime || date;
+    //     setShowTimePicker(Platform.OS === 'ios');
+    //     setDate(currentTime);
+    // };
+
+    const handleDateChange = (date: Date | null) => {
+        if (date) {
+            setDate(date);
+        }
+        setShowDatePicker(false);
+        setShowTimePicker(false);
     };
 
 
@@ -84,27 +94,49 @@ export default function CreateExpenseModal({ isVisible, setIsVisible, setExpense
                         value={description}
                         onChangeText={setDescription}
                     />
-                    <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowDatePicker(true)}>
-                        <Text>{format(date, "d 'de' MMMM, yyyy", { locale: es })}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowTimePicker(true)}>
-                        <Text>{format(date, "HH:mm", { locale: es })}</Text>
-                    </TouchableOpacity>
-                    {showDatePicker && (
-                        <DateTimePicker
-                            value={date}
-                            mode="date"
-                            display="default"
-                            onChange={onChangeDatePicker}
+                    {/* Date and Time Pickers */}
+                    {Platform.OS === 'web' ? (
+                        <DatePicker
+                            selected={date}
+                            onChange={handleDateChange}
+                            showTimeSelect
+                            dateFormat="Pp"
+                            locale="es"
+                            className="date-picker"
                         />
-                    )}
-                    {showTimePicker && (
-                        <DateTimePicker
-                            value={date}
-                            mode="time"
-                            display="default"
-                            onChange={onChangeTimePicker}
-                        />
+                    ) : (
+                        <>
+                            <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowDatePicker(true)}>
+                                <Text>{format(date, "d 'de' MMMM, yyyy", { locale: es })}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowTimePicker(true)}>
+                                <Text>{format(date, "HH:mm", { locale: es })}</Text>
+                            </TouchableOpacity>
+                            {showDatePicker && (
+                                <DateTimePicker
+                                    value={date}
+                                    mode="date"
+                                    display="default"
+                                    // onChange={onChangeDatePicker}
+                                    onChange={(event, selectedDate) => {
+                                        handleDateChange(selectedDate || date);
+                                        setShowDatePicker(false);
+                                    }}
+                                />
+                            )}
+                            {showTimePicker && (
+                                <DateTimePicker
+                                    value={date}
+                                    mode="time"
+                                    display="default"
+                                    // onChange={onChangeTimePicker}
+                                    onChange={(event, selectedTime) => {
+                                        handleDateChange(selectedTime || date);
+                                        setShowTimePicker(false);
+                                    }}
+                                />
+                            )}
+                        </>
                     )}
                     <TouchableOpacity style={styles.createButton} onPress={handleCreateExpense}>
                         <Text style={styles.createButtonText}>Crear</Text>

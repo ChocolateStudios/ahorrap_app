@@ -12,7 +12,6 @@ export class UsersApi {
     }
 
     static async loginUser(data: SaveUserResource): Promise<AxiosResponse<AuthenticatedUserResource, any>> {
-        console.log(`${this.baseUrl}/login`);
         return await http.post(`${this.baseUrl}/login`, data);
     }
 
@@ -22,5 +21,9 @@ export class UsersApi {
 
     static async updateUserPassword(data: SaveUserResource): Promise<AxiosResponse<UserResource, any>> {
         return await http.put(`${this.baseUrl}/update/password`, data);
+    }
+
+    static async getUser(): Promise<AxiosResponse<UserResource, any>> {
+        return await http.get(this.baseUrl);
     }
 }

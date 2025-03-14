@@ -1,42 +1,46 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { AuthProvider, useAuth } from '../store/AuthContext';
+import { useRouter } from 'expo-router';
 
-import { useColorScheme } from '@/core/_shared/hooks/useColorScheme';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Ionicons } from "@expo/vector-icons";
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...Ionicons.font,
-  });
+export default function Layout() {
+  const { user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (user) {
+      router.replace('/home');
+    } else {
+      router.replace('/login');
     }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  }, [user]);
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(core)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <AuthProvider>
+      {/*
+        Stack: each screen is stacked on top of the other and
+        allows "push/pop" type transitions by default
+      */}
+      <Stack screenOptions={{ headerShown: false }}>
+        {/*
+          Stack.Screen: Defines a screen within the Stack navigation.
+          name='index': This is the route name of this screen. In this case, 'index' indicates the main screen (the root).
+        */}
+        <Stack.Screen name='index' />
+        {/*
+          Other routes are defined here.
+          name='login': This is the route name for the login screen.
+        */}
+        <Stack.Screen name='login' />
+        {/*
+          name='home': This is the route name for the home screen.
+        */}
+        <Stack.Screen name='home' />
+        <Stack.Screen name='budget-daily' />
+        <Stack.Screen name='categories' />
+        <Stack.Screen name='goals' />
+        <Stack.Screen name='recent-movements' />
+      </Stack>
+    </AuthProvider>
   );
 }

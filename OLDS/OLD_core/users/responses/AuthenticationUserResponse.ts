@@ -1,7 +1,7 @@
-import { UserResource } from "../resources/UserResource";
+import { AuthenticatedUserResource } from "../resources/AuthenticatedUserResource";
 
 export class AuthenticationUserResponse {
-    authenticatedUser?: UserResource | null = null;
+    authenticatedUser?: AuthenticatedUserResource | null = null;
     success: boolean = false;
     usernameErrorMessage: string = '';
     passwordErrorMessage: string = '';

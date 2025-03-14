@@ -1,30 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { Link } from 'expo-router'; // O la importación correspondiente para React Navigation
+import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 
-export default function HomeScreen() {
+export default function Index() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>SELECTOR AhorrApp'e</Text>
-      <Link href="/login" style={styles.link}>Login</Link>
-      <Link href="/register" style={styles.link}>Register</Link>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#00bfff" />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  link: {
-    fontSize: 18,
-    color: 'blue',
-    marginTop: 10,
-  },
-});

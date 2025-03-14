@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     marginBottom: 20,
+    alignItems: 'center',
   },
   input: {
     backgroundColor: '#ffffff',
@@ -102,6 +103,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    width: '100%',
+    maxWidth: 500,
   },
   errorText: {
     color: 'red',
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: '100%',
     alignItems: 'center',
+    maxWidth: 400,
   },
   recoverButtonText: {
     color: '#ffffff',

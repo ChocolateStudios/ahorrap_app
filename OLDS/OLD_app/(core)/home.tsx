@@ -2,6 +2,7 @@ import { ListFooter } from "@/components/_shared/ListFooter";
 import { SimpleAlert } from "@/components/_shared/SimpleAlert";
 import CreateExpenseModal from "@/components/expenses/CreateExpenseModal";
 import { ExpenseListItem } from "@/components/expenses/ExpenseListItem";
+import LogoutBtn from "@/components/users/LogoutBtn";
 import { Expense } from "@/core/expenses/models/Expense";
 import { GetAllExpensesUseCase } from "@/core/expenses/usecases/GetAllExpensesUseCase";
 import { LogoutUserUseCase } from "@/core/users/usecases/LogoutUserUseCase";
@@ -79,9 +80,10 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Total de Gastos</Text>
         <Text style={styles.headerAmount}>S/. {totalExpenses.toFixed(2)}</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#4CAF50" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        {/* <LogoutBtn /> */}
       </View>
       <FlatList
         data={expenses}
@@ -96,11 +98,11 @@ export default function HomeScreen() {
         <Ionicons name="add" size={30} color="#FFFFFF" />
       </TouchableOpacity>
 
-      <CreateExpenseModal 
-        isVisible={isAddExpenseVisible} 
-        setIsVisible={setIsAddExpenseVisible} 
-        setExpenses={setExpenses} 
-        setTotalExpenses={setTotalExpenses} 
+      <CreateExpenseModal
+        isVisible={isAddExpenseVisible}
+        setIsVisible={setIsAddExpenseVisible}
+        setExpenses={setExpenses}
+        setTotalExpenses={setTotalExpenses}
       />
     </LinearGradient>
   );
