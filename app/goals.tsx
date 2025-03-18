@@ -1,44 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
-import { useRouter } from 'expo-router';
-import { fetchGoals, Goal } from '../services/api';
-import * as Progress from 'react-native-progress';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+// Components
+import HeaderWithNavigation from '../components/HeaderWithNavigation';
+import FinancialGoalItem from '../components/FinancialGoalItem';
+import AddGoalButton from '../components/AddGoalButton';
+
+// Services and data
+import { mockFinancialGoalsDetailed } from '../services/mockData';
 
 export default function GoalsScreen() {
-  const router = useRouter();
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [goals, setGoals] = useState(mockFinancialGoalsDetailed);
 
+  // Se podría cargar los datos desde una API real
   useEffect(() => {
-    (async () => {
-      const data = await fetchGoals();
-      setGoals(data);
-    })();
+    // Simulación de carga de datos
+    setGoals(mockFinancialGoalsDetailed);
   }, []);
 
-  const renderGoalItem = ({ item }: { item: Goal }) => {
-    const progress = item.currentAmount / item.targetAmount;
-    return (
-      <View style={styles.goalItem}>
-        <Text style={styles.goalTitle}>{item.title}</Text>
-        <Text style={styles.goalSubtitle}>
-          {item.currentAmount} / {item.targetAmount}
-        </Text>
-        <Progress.Bar progress={progress} width={200} color="#3bceac" />
-        <Text style={styles.goalDeadline}>Deadline: {item.deadline}</Text>
-      </View>
-    );
+  const handleAddGoal = () => {
+    // TODO: Implementar funcionalidad para agregar nueva meta
+    console.log('Add new financial goal');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Financial Goals</Text>
-      <FlatList
-        data={goals}
-        keyExtractor={(item) => item.id}
-        renderItem={renderGoalItem}
-        contentContainerStyle={{ padding: 16 }}
+      <HeaderWithNavigation 
+        title="Metas Financieras"
+        showNotifications={true}
+        badgeCount={2}
       />
-      <Button title="Add New Goal" onPress={() => { /* TODO: add new goal */ }} />
+
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.subtitle}>
+          Establece y sigue tus metas financieras para alcanzar tus objetivos económicos.
+        </Text>
+
+        {goals.map((goal) => (
+          <FinancialGoalItem
+            key={goal.id}
+            title={goal.title}
+            targetAmount={goal.targetAmount}
+            currentAmount={goal.currentAmount}
+            deadline={goal.deadline}
+            icon={goal.icon}
+            iconBgColor={goal.iconBgColor}
+          />
+        ))}
+
+        <AddGoalButton onPress={handleAddGoal} />
+      </ScrollView>
+
+      <TouchableOpacity style={styles.floatingButton} onPress={handleAddGoal}>
+        <Ionicons name="add" size={28} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -48,27 +68,33 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f6fa',
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    margin: 16,
+  scrollView: {
+    flex: 1,
   },
-  goalItem: {
-    backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 80,
   },
-  goalTitle: {
+  subtitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  goalSubtitle: {
-    marginVertical: 4,
-  },
-  goalDeadline: {
-    marginTop: 4,
-    fontSize: 12,
     color: '#666',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#22A9A2',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
   },
 });

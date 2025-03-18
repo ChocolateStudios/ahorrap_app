@@ -1,45 +1,87 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import Slider from "@react-native-community/slider";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+// Components
+import HeaderWithNavigation from '../components/HeaderWithNavigation';
+import DailyLimitCard from '../components/DailyLimitCard';
+import SmartSuggestionCard from '../components/SmartSuggestionCard';
+import BudgetConsiderationItem from '../components/BudgetConsiderationItem';
 
 export default function BudgetDailyScreen() {
   const [dailyBudget, setDailyBudget] = useState(103.13);
   const [suggestion] = useState(69.0);
+  const [savingsAmount] = useState(230.0);
 
   const handleSaveBudget = () => {
     // Lógica para guardar el presupuesto en el backend (simulado)
     console.log('Daily Budget saved:', dailyBudget);
   };
 
+  const handleUseSuggestion = () => {
+    setDailyBudget(suggestion);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Presupuesto Diario</Text>
-      <Text style={styles.currentValue}>$ {dailyBudget.toFixed(2)}</Text>
-      <Slider
-        minimumValue={50}
-        maximumValue={200}
-        step={1}
-        value={dailyBudget}
-        onValueChange={(value) => setDailyBudget(value)}
-        style={styles.slider}
+      <HeaderWithNavigation 
+        title="Presupuesto Diario"
+        showNotifications={true}
+        badgeCount={2}
+        centerIcon={{
+          name: "wallet-outline",
+          color: "#FFF",
+          backgroundColor: "#22A9A2"
+        }}
       />
-      <Button title="Guardar presupuesto" onPress={handleSaveBudget} />
 
-      <View style={styles.suggestionContainer}>
-        <Text style={styles.suggestionTitle}>Sugerencia inteligente</Text>
-        <Text style={styles.suggestionValue}>S/ {suggestion.toFixed(2)}</Text>
-        <Text style={styles.suggestionText}>
-          Este presupuesto te permitiría ahorrar aproximadamente S/ 230.00 al mes.
-        </Text>
-        <Button title="Usar sugerencia" onPress={() => setDailyBudget(suggestion)} />
-      </View>
+      <ScrollView 
+        style={styles.scrollView} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <DailyLimitCard
+          value={dailyBudget}
+          onChange={setDailyBudget}
+          onSave={handleSaveBudget}
+          onInfoPress={() => console.log('Info pressed')}
+        />
 
-      <View style={styles.dataContainer}>
-        <Text style={styles.dataTitle}>Datos para considerar</Text>
-        <Text style={styles.dataItem}>Gasto diario promedio: S/ 76.67</Text>
-        <Text style={styles.dataItem}>Mayor categoría de gasto: Vivienda</Text>
-        <Text style={styles.dataItem}>Ahorro potencial mensual: S/ 230.00</Text>
-      </View>
+        <SmartSuggestionCard
+          amount={suggestion}
+          savingsAmount={savingsAmount}
+          onUse={handleUseSuggestion}
+        />
+
+        <Text style={styles.sectionTitle}>Datos para considerar</Text>
+        
+        <View style={styles.considerationsContainer}>
+          <BudgetConsiderationItem
+            icon="calendar-outline"
+            iconBgColor="#4b7bec"
+            label="Gasto diario promedio"
+            value="S/ 76.67"
+          />
+
+          <BudgetConsiderationItem
+            icon="home-outline"
+            iconBgColor="#ff9f43"
+            label="Mayor categoría de gasto"
+            value="Vivienda"
+          />
+
+          <BudgetConsiderationItem
+            icon="trending-up-outline"
+            iconBgColor="#20bf6b"
+            label="Ahorro potencial mensual"
+            value="S/ 230.00"
+          />
+        </View>
+      </ScrollView>
+
+      <TouchableOpacity style={styles.floatingButton}>
+        <Ionicons name="add" size={28} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -48,53 +90,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f6fa',
-    padding: 16,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 80,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginTop: 10,
     marginBottom: 16,
   },
-  currentValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  slider: {
-    marginVertical: 16,
-  },
-  suggestionContainer: {
+  considerationsContainer: {
     backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 8,
-    marginVertical: 16,
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  suggestionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  suggestionValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 8,
-    color: '#2ecc71',
-  },
-  suggestionText: {
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  dataContainer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 8,
-  },
-  dataTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  dataItem: {
-    fontSize: 14,
-    marginVertical: 2,
+  floatingButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#22A9A2',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
   },
 });

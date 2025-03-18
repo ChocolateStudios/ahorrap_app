@@ -71,48 +71,73 @@ export async function fetchCategories(): Promise<Category[]> {
   ];
 }
 
+// Mock data para movimientos
+let mockMovements: Movement[] = [
+  {
+    id: 'm1',
+    description: 'Consulta médica',
+    category: 'Salud',
+    amount: 300,
+    type: 'expense',
+    date: '2025-03-10',
+  },
+  {
+    id: 'm2',
+    description: 'Dividendos',
+    category: 'Inversiones',
+    amount: 120,
+    type: 'income',
+    date: '2025-03-09',
+  },
+  {
+    id: 'm3',
+    description: 'Cine y cena',
+    category: 'Entretenimiento',
+    amount: 150,
+    type: 'expense',
+    date: '2025-03-08',
+  },
+  {
+    id: 'm4',
+    description: 'Proyecto freelance',
+    category: 'Freelance',
+    amount: 800,
+    type: 'income',
+    date: '2025-03-07',
+  },
+  {
+    id: 'm5',
+    description: 'Gasolina',
+    category: 'Transporte',
+    amount: 200,
+    type: 'expense',
+    date: '2025-03-07',
+  },
+];
+
 export async function fetchRecentMovements(): Promise<Movement[]> {
   await new Promise(resolve => setTimeout(resolve, 500));
-  return [
-    {
-      id: 'm1',
-      description: 'Consulta médica',
-      category: 'Salud',
-      amount: 300,
-      type: 'expense',
-      date: '2025-03-10',
-    },
-    {
-      id: 'm2',
-      description: 'Dividendos',
-      category: 'Inversiones',
-      amount: 120,
-      type: 'income',
-      date: '2025-03-09',
-    },
-    {
-      id: 'm3',
-      description: 'Cine y cena',
-      category: 'Entretenimiento',
-      amount: 150,
-      type: 'expense',
-      date: '2025-03-08',
-    },
-    {
-      id: 'm4',
-      description: 'Proyecto freelance',
-      category: 'Freelance',
-      amount: 800,
-      type: 'income',
-      date: '2025-03-07',
-    },
-    {
-      id: 'm5',
-      description: 'Gasolina',
-      category: 'Transporte',
-      amount: 200,
-      type: 'expense',
-      date: '2025-03-07',
-    },
-  ];
+  return [...mockMovements];
+}
+
+export async function saveMovement(movement: {
+  description: string;
+  category: string;
+  amount: number;
+  type: 'income' | 'expense';
+  date: string;
+}): Promise<Movement> {
+  // Simular una llamada a API
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // Crear nuevo movimiento
+  const newMovement: Movement = {
+    id: `m${mockMovements.length + 1}`,
+    ...movement
+  };
+  
+  // Añadir a la lista de movimientos mock
+  mockMovements = [newMovement, ...mockMovements];
+  
+  return newMovement;
 }
